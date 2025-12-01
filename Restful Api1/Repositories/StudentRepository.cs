@@ -5,17 +5,25 @@ namespace Restful_Api1.Repositories
 {
     public class StudentRepository:IStudentRepository
     {
+        private readonly AppDbContext _Context;
+
+        public StudentRepository(AppDbContext appDbContext)
+        {
+            _Context = appDbContext;
+        }
+
+
         //get all student list
        public  List<Student> GETALL()
         {
 
-            return FakeDb.Std.ToList();
+            return _Context.Students.ToList();
 
         }
         //get student by id
         public Student getbyid(int id)
         {
-           var hk= FakeDb.Std.FirstOrDefault(x => x.Id==id)?? new Student();
+           var hk= _Context.Students.FirstOrDefault(x => x.Id==id)?? new Student();
             
            return hk;
         }
@@ -23,7 +31,7 @@ namespace Restful_Api1.Repositories
         //add student 
          public  Student Add(Student student)
         {
-             FakeDb.Std.Add(student);
+            _Context.Students.Add(student);
              return student;
         }
         //update student 
