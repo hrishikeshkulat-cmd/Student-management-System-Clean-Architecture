@@ -1,12 +1,10 @@
 ﻿using Restful_Api1.Models;
 using Restful_Api1.Repositories;
+using System.Threading.Tasks;
 
 
 namespace Restful_Api1.Service
 {
-
- 
-
 
     public class StudentService : IStudentService
     {
@@ -19,36 +17,31 @@ namespace Restful_Api1.Service
 
 
 
-        public List<Student> GETALL()
+        public async Task < List<Student>> GetAllAsync()
         {
-            return _repo.GETALL();
+            return await  _repo.GetAllAsync();
 
         }
 
-        public Student getbyid(int id)
+        public async Task<Student> GetByIdAsync(int id)
         {
-           return _repo.getbyid(id);
+           return await  _repo.GetByIdAsync( id);
         }
-        public Student Add(Student student)
+        public async Task<Student> AddAsync(Student student)
         {
-           return _repo.Add(student);
-        }
-
-
-        public Student Added(Student student)
-        {
-            return _repo.Add(student);
+           return await _repo.AddAsync(student);
         }
 
 
-        public bool updatestd(int id, StudentDto dto)
+     
+        public async Task< bool> UpdateAsync(int id, StudentDto dto)
         {
-          return _repo.updatestd(id, dto);
+          return await _repo.UpdateAsync( id, dto);
         }
 
-        public bool delete(int id)
+        public async Task< bool> DeleteAsync(int id)
         {
-           return _repo.delete(id);
+           return await _repo.DeleteAsync( id);
         }
     }
 }

@@ -1,9 +1,12 @@
-﻿using Restful_Api1.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using Restful_Api1.Models;
 using Restful_Api1.Service;
+using System.Threading.Tasks;
+
 
 namespace Restful_Api1.Repositories
 {
-    public class StudentRepository:IStudentRepository
+    public class StudentRepository: IStudentRepository
     {
         private readonly AppDbContext _Context;
 
@@ -12,32 +15,29 @@ namespace Restful_Api1.Repositories
             _Context = appDbContext;
         }
 
-
         //get all student list
-       public  List<Student> GETALL()
+        public async Task<List<Student>> GetAllAsync()
         {
-
-            return _Context.Students.ToList();
-
+            return await _Context.Students.ToListAsync();
         }
         //get student by id
-        public Student getbyid(int id)
+        public async Task< Student> GetByIdAsync(int id)
         {
-           var hk= _Context.Students.FirstOrDefault(x => x.Id==id)?? new Student();
-            
-           return hk;
+            var hk= await  _Context.Students.FirstOrDefaultAsync(x => x.Id==id);
+           return   hk;
         }
 
         //add student 
-         public  Student Add(Student student)
+         public async Task < Student>  AddAsync(Student student)
         {
-            _Context.Students.Add(student);
-             return student;
+             await _Context.Students.AddAsync(student);
+            await _Context.SaveChangesAsync();
+             return  student;
         }
         //update student 
-       public  bool updatestd(int id, StudentDto dto)
+       public async Task< bool> UpdateAsync(int id, StudentDto dto)
         {
-            var mk =getbyid(id);
+            var mk =  await GetByIdAsync( id);
             if(mk != null)
             {
                 return false;
@@ -45,16 +45,17 @@ namespace Restful_Api1.Repositories
 
             mk.Name=dto.Name;
             mk.Age=dto.Age;
-            return true;
+           await _Context.SaveChangesAsync();
+            return  true;
         }
-       public  bool delete(int id)
+       public  async Task<bool> DeleteAsync(int id)
         {
-            var hk = getbyid(id);
+            var hk =  await GetByIdAsync(id);
             if (hk != null)
             {
                 return false;
             }
-            FakeDb.Std.Remove(hk);
+            await _Context.SaveChangesAsync();
             return true;
 
         }

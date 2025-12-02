@@ -5,15 +5,11 @@ namespace Restful_Api1.Service
     public interface IStudentService
     {
 
-        List<Student> GETALL();
-
-        Student getbyid(int id);
-
-        Student Add(Student student);
-
-        bool updatestd(int id, StudentDto dto);
-
-        bool delete(int id);
+        Task<List<Student>> GetAllAsync();
+        Task<Student> GetByIdAsync(int id);
+        Task<Student> AddAsync(Student student);
+        Task<bool> UpdateAsync(int id, StudentDto dto);
+        Task<bool> DeleteAsync(int id);
 
 
     }
