@@ -37,8 +37,8 @@ namespace Restful_Api1.Repositories
         //update student 
        public async Task< bool> UpdateAsync(int id, StudentDto dto)
         {
-            var mk =  await GetByIdAsync( id);
-            if(mk != null)
+            var mk = await _Context.Students.FirstOrDefaultAsync(x => x.Id == id);
+            if(mk == null)
             {
                 return false;
             }
@@ -48,13 +48,15 @@ namespace Restful_Api1.Repositories
            await _Context.SaveChangesAsync();
             return  true;
         }
-       public  async Task<bool> DeleteAsync(int id)
+       public  async Task<bool> DeleteAsync (int id)
         {
-            var hk =  await GetByIdAsync(id);
-            if (hk != null)
+          var hk = await _Context.Students.FirstOrDefaultAsync(x => x.Id == id);
+          
+            if (hk == null)
             {
                 return false;
             }
+           _Context.Students.Remove(hk);
             await _Context.SaveChangesAsync();
             return true;
 
