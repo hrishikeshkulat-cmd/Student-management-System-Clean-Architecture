@@ -1,7 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query.Internal;
+using Microsoft.IdentityModel.Tokens;
 using Restful_Api1.Models;
-using Restful_Api1.Service;
-using System.Threading.Tasks;
+using System.Reflection.Metadata.Ecma335;
 
 
 namespace Restful_Api1.Repositories
@@ -61,6 +62,111 @@ namespace Restful_Api1.Repositories
             return true;
 
         }
+
+        public async Task <List<Student>> FilterAsync(int? minAge, int? maxAge)
+        {
+
+            var query= _Context.Students.AsQueryable();
+
+            if(minAge.HasValue )
+            
+            query = query.Where(x => x.Age >= minAge.Value);
+
+            if(maxAge.HasValue )
+
+            query=query.Where(x => x.Age <= maxAge.Value);
+
+
+            query=query.OrderBy(x=> x.Id);
+
+            return  await query.ToListAsync();
+            
+        }
+
+        //MUltisearach by filter
+        public  async Task<List<Student>>AdvancedFilterAsync(string? name, int? minAge, int? maxAge)
+        {
+
+            var query = _Context.Students.AsQueryable();
+
+            if (!string.IsNullOrEmpty(name))
+            {
+                var lower = name.ToLower();
+
+                query = query.Where(x => x.Name.ToLower().Contains(lower));
+
+            }
+
+            if(minAge.HasValue)
+            {
+                query.Where(x => x.Age >= minAge.Value);
+
+            }
+
+            if (maxAge.HasValue)
+             {
+                query.Where(x => x.Age <= maxAge.Value);
+            }
+
+            query = query.OrderBy(x => x.Id);
+
+            return await query.ToListAsync();
+
+        }
+
+        public async Task<List<Student>> SortAsync(string orderBy, string direction)
+        {
+            var query = _Context.Students.AsQueryable();
+
+
+            orderBy= orderBy?.ToLower();
+            direction= direction?.ToLower();
+
+
+            switch (orderBy)
+            {
+                case "name":
+                    query = direction == "desc"
+                        ? query.OrderByDescending(x => x.Name)
+                        : query.OrderBy(x => x.Id);
+                break;
+
+
+
+                case "age":
+                    query=direction=="desc"
+                        ?query.OrderByDescending(x=>x.Age)
+                        : query.OrderBy(x => x.Id);
+                break;
+
+
+
+
+                case "id":
+                    query = direction == "desc"
+                        ? query.OrderByDescending(x => x.Id)
+                        : query.OrderBy(x => x.Id);
+                    break;
+            }
+            return await query.ToListAsync();
+
+        }
+
+        public async Task<List<Student>> SearchAsync(string? search)
+        {
+            var query = _Context.Students.AsQueryable();
+
+            if(!string.IsNullOrEmpty(search))
+            {
+                var Lower = search.ToLower();
+
+               query= query.Where(x => x.Name !=null && x.Name .ToLower().Contains(Lower));
+            }
+            query = query.OrderBy(x => x.Id);
+            return await query.ToListAsync();
+        }
+
+
 
 
 

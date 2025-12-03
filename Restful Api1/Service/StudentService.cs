@@ -43,5 +43,33 @@ namespace Restful_Api1.Service
         {
            return await _repo.DeleteAsync( id);
         }
+
+
+        public async Task<List<Student>> FilterAsync(int? minAge, int? maxAge)
+        {
+
+           return await _repo.FilterAsync( minAge, maxAge);
+
+
+        }
+       public  Task<List<Student>> AdvancedFilterAsync(string? name, int? minAge, int? maxAge)
+        {
+
+            return _repo.AdvancedFilterAsync( name, minAge, maxAge);
+
+        }
+        public Task<List<Student>> SortAsync(string orderBy, string direction)
+        {
+
+            return _repo.SortAsync( orderBy, direction);
+        }
+
+       public async Task<List<Student>> SearchAsync(string? search)
+        {
+            return await _repo.SearchAsync(search);
+        }
+
+
     }
+
 }
