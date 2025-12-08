@@ -1,4 +1,5 @@
-﻿using Restful_Api1.Models;
+﻿using Restful_Api1.Dto;
+using Restful_Api1.Models;
 
 namespace Restful_Api1.Repositories
 {
@@ -6,14 +7,14 @@ namespace Restful_Api1.Repositories
     {
         Task<List<Student>> GetAllAsync();
         Task<Student> GetByIdAsync(int id);
-        Task<Student> AddAsync(Student student);
-        Task<bool> UpdateAsync(int id, StudentDto dto);
-        Task<bool> DeleteAsync(int id);
-        Task<List<Student>> FilterAsync(int? minAge, int? maxAge);
 
-        Task<List<Student>> AdvancedFilterAsync(string? name, int? minAge, int? maxAge);
-        Task<List<Student>> SortAsync(string orderBy, string direction);
-        Task<List<Student>> SearchAsync(string? search);
+        Task<Student?> CreateStudentAsync(Student student);
+        Task<bool> UpdateStudentAsync(int id, UpdateStudentDto dto);
+        Task<bool> DeleteStudentAsync(int id);
+
+        Task<Student?> GetByIdWithDepartmentAsync(int id);
+
+        Task<List<Student>> GetAllWithQueryAsync(StudentQueryParameters parameters);
 
     }
 }

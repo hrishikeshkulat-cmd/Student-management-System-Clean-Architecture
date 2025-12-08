@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Restful_Api1.Dto;
 using Restful_Api1.Models;
 using Restful_Api1.Service;
-using System.Security.AccessControl;
-using System.Threading.Tasks;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Restful_Api1.Controllers
 {
@@ -18,11 +16,14 @@ namespace Restful_Api1.Controllers
             _studentService = studentService;
         }
 
-        [HttpGet("list")]
-        public async Task<IActionResult> GETAll()
+        [HttpGet]
+      public async   Task<IActionResult> GetAllStudents([FromQuery]StudentQueryParameters parameters)
+
         {
-            return Ok(await _studentService.GetAllAsync());
+            var hk = await _studentService.GetAllStudentsWithQueryAsync(parameters);
+            return Ok(hk);
         }
+
 
         [HttpGet("{id}")]
         public async Task<IActionResult> getbyid(int id)
@@ -35,70 +36,64 @@ namespace Restful_Api1.Controllers
 
         }
 
-        [HttpPost("create")]
-        public async Task<IActionResult> Added(StudentDto stud)
+        [HttpPost]
+        public async Task<IActionResult> CreateStudent(CreateStudentDto dto)
         {
-            var Student = new Student()
+            if (!ModelState.IsValid)
             {
-                Name = stud.Name,
-                Age = stud.Age
+                return BadRequest(ModelState);
+            }
+            var createdStudent = await _studentService.CreateStudentAsync(dto);
+            if (createdStudent == null)
+            {
+                return BadRequest("Invalid Department ID");
+            }
+            return Ok(createdStudent);
 
-            };
-
-
-            var created = await _studentService.AddAsync(Student);
-            return Created("", created);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Updatestd(int id, StudentDto dto)
+        public async Task<IActionResult> UpdateStudentAsync(int id, UpdateStudentDto dto)
         {
-            var hk = await _studentService.UpdateAsync(id, dto);
-            if (!hk)
-                return NotFound();
 
-            return NoContent();
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var createdStudent = await _studentService.UpdateStudentAsync(id, dto);
 
+            if (!createdStudent)
+            {
+                return NotFound("Student not found");
+            }
+            return Ok("Student updated successfully");
         }
+
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> DeleteStudentAsync(int id)
         {
-            var del = await _studentService.DeleteAsync(id);
-            if (!del) return NotFound("not deleted");
+
+            var del = await _studentService.DeleteStudentAsync(id);
+
+            if (!del)
+            {
+                return NotFound("Student not found");
+            }
             return NoContent();
+
         }
 
-        [HttpGet("filter")]
-        public async Task<ActionResult> Filter([FromQuery] int? minAge, [FromQuery] int? maxAge)
+        [HttpGet("{id}/with-department")]
+        public async Task<IActionResult> GetByIdWithDepartmentAsync(int id)
         {
+            var dto=await _studentService.GetByIdWithDepartmentAsync(id);
+            if(dto== null)
+                return NotFound("id not found");
 
-            var list = await _studentService.FilterAsync(minAge, maxAge);
-            return Ok (list);
+            return Ok(dto);
+
         }
 
-        [HttpGet("multisearch")]
-      public async Task<IActionResult> AdvancedFilterAsync([FromQuery]string? name, [FromQuery] int? minAge, [FromQuery] int? maxAge)
-        {
-            var multi= await _studentService.AdvancedFilterAsync(name, minAge, maxAge);
-            return Ok(multi);
-        }
-
-
-        [HttpGet("sorting")]
-
-      public async  Task<IActionResult> SortAsync(string orderBy, string direction)
-        {
-            var hk= await _studentService.SortAsync(orderBy, direction);
-            return Ok(hk);
-        }
-
-        [HttpGet("searching")]
-
-       public async Task<IActionResult> SearchAsync(string? search)
-        {
-            var hk = await _studentService.SearchAsync(search);
-            return Ok(hk);
-        }
 
 
 
@@ -108,4 +103,4 @@ namespace Restful_Api1.Controllers
 
 
 
-    
+

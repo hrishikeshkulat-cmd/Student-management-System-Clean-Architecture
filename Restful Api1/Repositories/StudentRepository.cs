@@ -1,13 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query.Internal;
-using Microsoft.IdentityModel.Tokens;
+using Restful_Api1.Dto;
 using Restful_Api1.Models;
-using System.Reflection.Metadata.Ecma335;
 
 
 namespace Restful_Api1.Repositories
 {
-    public class StudentRepository: IStudentRepository
+    public class StudentRepository : IStudentRepository
     {
         private readonly AppDbContext _Context;
 
@@ -22,153 +20,114 @@ namespace Restful_Api1.Repositories
             return await _Context.Students.ToListAsync();
         }
         //get student by id
-        public async Task< Student> GetByIdAsync(int id)
+        public async Task<Student> GetByIdAsync(int id)
         {
-            var hk= await  _Context.Students.FirstOrDefaultAsync(x => x.Id==id);
-           return   hk;
+            var hk = await _Context.Students.FirstOrDefaultAsync(x => x.Id == id);
+            return hk;
         }
 
-        //add student 
-         public async Task < Student>  AddAsync(Student student)
+
+
+        public async Task<Student?> CreateStudentAsync(Student student)
         {
-             await _Context.Students.AddAsync(student);
+
+            var Create = _Context.Students.Add(student).Entity;
             await _Context.SaveChangesAsync();
-             return  student;
-        }
-        //update student 
-       public async Task< bool> UpdateAsync(int id, StudentDto dto)
-        {
-            var mk = await _Context.Students.FirstOrDefaultAsync(x => x.Id == id);
-            if(mk == null)
-            {
-                return false;
-            }
+            return Create;
 
-            mk.Name=dto.Name;
-            mk.Age=dto.Age;
-           await _Context.SaveChangesAsync();
-            return  true;
         }
-       public  async Task<bool> DeleteAsync (int id)
+        public async Task<bool> UpdateStudentAsync(int id, UpdateStudentDto dto)
         {
-          var hk = await _Context.Students.FirstOrDefaultAsync(x => x.Id == id);
-          
-            if (hk == null)
-            {
-                return false;
-            }
-           _Context.Students.Remove(hk);
+            var hk = await _Context.Students.FirstOrDefaultAsync(x => x.Id == id);
+            if (hk == null) return false;
+
+            hk.Name = dto.Name;
+            hk.Age = dto.Age;
+            hk.DepartmentId = dto.DepartmentId;
+
+
             await _Context.SaveChangesAsync();
             return true;
 
         }
+        public async Task<bool> DeleteStudentAsync(int id)
+        {
+            var hk = await _Context.Students.FirstOrDefaultAsync(h => h.Id == id);
 
-        public async Task <List<Student>> FilterAsync(int? minAge, int? maxAge)
+            _Context.Students.Remove(hk);
+            await _Context.SaveChangesAsync();
+            return true;
+
+
+        }
+
+        public async Task<Student?> GetByIdWithDepartmentAsync(int id)
+        {
+            return await _Context.Students
+                .Include(s => s.Department)
+                .FirstOrDefaultAsync(s => s.Id == id);
+
+        }
+
+        public async Task<List<Student>> GetAllWithQueryAsync(StudentQueryParameters parameters)
         {
 
-            var query= _Context.Students.AsQueryable();
+            //start query
+            IQueryable<Student> query = _Context.Students.AsNoTracking();
 
-            if(minAge.HasValue )
+            //include department
+            if (parameters.IncludeDepartment)
+            {
+                query = query.Include(s => s.Department);
+            }
+
+            //sorting
+            if (!string.IsNullOrWhiteSpace(parameters.Sortby))
+            {
+
+                switch (parameters.Sortby.ToLower())
+
+                {
+                    case "name":
+
+                        query = query.OrderBy(s => s.Name);
+                        break;
+
+                    case "age":
+
+                        query = query.OrderBy(s => s.Age);
+                        break;
+                }
+            }
+                //start pagitation
+
+                int skip = (parameters.Page - 1) * parameters.Pagesize;
+
+                return await query
+                    .Skip(skip)
+                    .Take(parameters.Pagesize)
+                    .ToListAsync();
+
             
-            query = query.Where(x => x.Age >= minAge.Value);
-
-            if(maxAge.HasValue )
-
-            query=query.Where(x => x.Age <= maxAge.Value);
 
 
-            query=query.OrderBy(x=> x.Id);
 
-            return  await query.ToListAsync();
-            
-        }
-
-        //MUltisearach by filter
-        public  async Task<List<Student>>AdvancedFilterAsync(string? name, int? minAge, int? maxAge)
-        {
-
-            var query = _Context.Students.AsQueryable();
-
-            if (!string.IsNullOrEmpty(name))
-            {
-                var lower = name.ToLower();
-
-                query = query.Where(x => x.Name.ToLower().Contains(lower));
-
-            }
-
-            if(minAge.HasValue)
-            {
-                query.Where(x => x.Age >= minAge.Value);
-
-            }
-
-            if (maxAge.HasValue)
-             {
-                query.Where(x => x.Age <= maxAge.Value);
-            }
-
-            query = query.OrderBy(x => x.Id);
-
-            return await query.ToListAsync();
 
         }
 
-        public async Task<List<Student>> SortAsync(string orderBy, string direction)
-        {
-            var query = _Context.Students.AsQueryable();
 
-
-            orderBy= orderBy?.ToLower();
-            direction= direction?.ToLower();
-
-
-            switch (orderBy)
-            {
-                case "name":
-                    query = direction == "desc"
-                        ? query.OrderByDescending(x => x.Name)
-                        : query.OrderBy(x => x.Id);
-                break;
-
-
-
-                case "age":
-                    query=direction=="desc"
-                        ?query.OrderByDescending(x=>x.Age)
-                        : query.OrderBy(x => x.Id);
-                break;
-
-
-
-
-                case "id":
-                    query = direction == "desc"
-                        ? query.OrderByDescending(x => x.Id)
-                        : query.OrderBy(x => x.Id);
-                    break;
-            }
-            return await query.ToListAsync();
-
-        }
-
-        public async Task<List<Student>> SearchAsync(string? search)
-        {
-            var query = _Context.Students.AsQueryable();
-
-            if(!string.IsNullOrEmpty(search))
-            {
-                var Lower = search.ToLower();
-
-               query= query.Where(x => x.Name !=null && x.Name .ToLower().Contains(Lower));
-            }
-            query = query.OrderBy(x => x.Id);
-            return await query.ToListAsync();
-        }
 
 
 
 
 
     }
+
+
+
+
+
+
+
+
 }
