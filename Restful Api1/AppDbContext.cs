@@ -14,6 +14,8 @@ namespace Restful_Api1
 
         public DbSet<Department> Departments { get; set; }
 
+        public DbSet<Course> Courses { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
@@ -26,11 +28,11 @@ namespace Restful_Api1
                  .HasForeignKey<StudentAddress>(a => a.StudentId)
                  .OnDelete(DeleteBehavior.Cascade);
 
-              modelBuilder.Entity<Department>()
-             .HasMany(d => d.Students)
-            .WithOne(s => s.Department)
-            .HasForeignKey(s => s.DepartmentId)
-             .OnDelete(DeleteBehavior.SetNull);
+            modelBuilder.Entity<Department>()
+           .HasMany(d => d.Students)
+          .WithOne(s => s.Department)
+          .HasForeignKey(s => s.DepartmentId)
+           .OnDelete(DeleteBehavior.SetNull);
         }
 
     }

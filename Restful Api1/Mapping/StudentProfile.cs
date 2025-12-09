@@ -4,9 +4,9 @@ using Restful_Api1.Models;
 
 namespace Restful_Api1.Mapping
 {
-    public class StudentProfile:Profile
+    public class StudentProfile : Profile
     {
-        
+
         public StudentProfile()
 
         {
@@ -16,7 +16,11 @@ namespace Restful_Api1.Mapping
                 .ForMember(dest => dest.DepartmentName
                 , opt => opt.MapFrom(src => src.Department.DepartmentName));
 
-                CreateMap<Department, DepartmentDto>();
+            CreateMap<Department, DepartmentDto>();
+
+            CreateMap<Course, CourseDto>();
+            CreateMap<CreateCourseDto, Course>();
+            CreateMap<UpdateCourseDto, Course>();
         }
 
 

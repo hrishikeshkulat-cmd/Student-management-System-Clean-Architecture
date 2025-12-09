@@ -9,7 +9,7 @@ namespace Restful_Api1.Models
 
         [Required]
         [MaxLength(50)]
-        public string? DepartmentName { get; set; }
+        public string DepartmentName { get; set; }= null!;
 
         public List<Student>? Students { get; set; }
 
