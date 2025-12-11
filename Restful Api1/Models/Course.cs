@@ -15,6 +15,6 @@ namespace Restful_Api1.Models
 
 
         //joining property
-        // public ICollection<Enrollment>?Enrollments { get; set; } 
+        public ICollection<Enrollment>?Enrollments { get; set; } 
     }
 }

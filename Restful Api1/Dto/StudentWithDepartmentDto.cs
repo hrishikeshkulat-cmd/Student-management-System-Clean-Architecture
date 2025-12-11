@@ -1,10 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Restful_Api1.Models;
-using Restful_Api1.Dto;
-
-
-
-namespace Restful_Api1.Dto
+﻿namespace Restful_Api1.Dto
 {
     public class StudentWithDepartmentDto
     {

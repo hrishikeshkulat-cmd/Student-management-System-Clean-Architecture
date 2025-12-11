@@ -21,6 +21,8 @@ namespace Restful_Api1.Mapping
             CreateMap<Course, CourseDto>();
             CreateMap<CreateCourseDto, Course>();
             CreateMap<UpdateCourseDto, Course>();
+
+            CreateMap<Enrollment, EnrollmentDto>();
         }
 
 
