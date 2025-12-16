@@ -19,6 +19,9 @@ namespace Restful_Api1
 
         public DbSet<Enrollment> Enrollments { get; set; }
 
+         public DbSet<User> Users { get; set; }
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
@@ -58,6 +61,7 @@ namespace Restful_Api1
                 .HasForeignKey(e => e.CourseId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
+
 
     }
 }

@@ -4,7 +4,6 @@ namespace Restful_Api1.Repositories
 {
     public interface IEnrollmentRepository
     {
-
             Task<bool> EnrollmentExistsAsync(int studentId, int courseId);
 
             Task<Enrollment> AddEnrollmentAsync(Enrollment enrollment);
@@ -13,7 +12,6 @@ namespace Restful_Api1.Repositories
             Task<List<Course>> GetCoursesForStudentAsync(int studentId);
             Task<List<Student>> GetStudentsForCourseAsync(int courseId);
         
-
 
     }
 }

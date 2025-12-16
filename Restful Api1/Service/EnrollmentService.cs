@@ -2,6 +2,9 @@
 using Restful_Api1.Dto;
 using Restful_Api1.Models;
 using Restful_Api1.Repositories;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
+
 
 
 
@@ -12,14 +15,14 @@ namespace Restful_Api1.Service
     {
 
         private readonly IEnrollmentRepository _enrollmentRepository;
-        private readonly StudentRepository _studentRepository;
-        private readonly CourseRepository _courseRepository;
-        private readonly IMapper? _mapper;
+        private readonly IStudentRepository _studentRepository;
+        private readonly ICourseRepository _courseRepository;
+        private readonly IMapper _mapper;
 
 
         public EnrollmentService(IEnrollmentRepository enrollmentRepository,
-            StudentRepository studentRepository,
-            CourseRepository courseRepository,
+            IStudentRepository studentRepository,
+            ICourseRepository courseRepository,
             IMapper mapper)
         {
             _enrollmentRepository = enrollmentRepository;
@@ -55,6 +58,28 @@ namespace Restful_Api1.Service
             return true;
 
         }
+       public async  Task<bool> UnenrollStudentAsync(int studentId, int courseId)
+        {
+
+           await   _enrollmentRepository.RemoveEnrollmentAsync(studentId, courseId);
+            return true;
+
+        }
+       public async  Task<List<CourseDto>> GetCoursesForStudentAsync(int studentId)
+        {
+            var courses = await  _enrollmentRepository.GetCoursesForStudentAsync(studentId);
+            return courses
+                .Select(s => _mapper.Map<CourseDto>(s)).ToList();
+        }
+
+
+      public async   Task<List<StudentDto>> GetStudentsForCourseAsync(int courseId)
+        {
+            var student = await _enrollmentRepository.GetStudentsForCourseAsync(courseId);
+            return student
+                .Select(s =>_mapper.Map<StudentDto>(s)).ToList();
+        }
+
 
 
     }

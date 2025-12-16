@@ -6,10 +6,11 @@ namespace Restful_Api1.Service
     public interface IEnrollmentService
     {
 
-        Task<bool> EnrollmentAsync(EnrollmentDto dto);
+        Task<bool> EnrollmentExistsAsync(EnrollStudentDto dto);
+        Task<bool> UnenrollStudentAsync(int studentId, int courseId);
 
-       Task<bool> EnrollmentExistsAsync(EnrollStudentDto dto);
-
+        Task<List<CourseDto>> GetCoursesForStudentAsync(int studentId);
+        Task<List<StudentDto>> GetStudentsForCourseAsync(int courseId);
 
 
     }
