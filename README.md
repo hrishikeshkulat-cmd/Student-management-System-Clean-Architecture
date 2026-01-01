@@ -1,153 +1,229 @@
-# 🚀 Employee Management RESTful API  
-### ASP.NET Core Web API + EF Core + Repository Pattern
+🚀 Student Management System – RESTful API
+ASP.NET Core Web API • EF Core • JWT Authentication • Clean Architecture
 
 ![.NET](https://img.shields.io/badge/.NET-8.0-purple?style=for-the-badge)
+
 ![C#](https://img.shields.io/badge/C%23-Language-blue?style=for-the-badge)
+
 ![EFCore](https://img.shields.io/badge/Entity%20Framework-Core-green?style=for-the-badge)
+
+![JWT](https://img.shields.io/badge/JWT-Authentication-orange?style=for-the-badge)
+
 ![Swagger](https://img.shields.io/badge/Swagger-API%20Docs-brightgreen?style=for-the-badge)
 
-A clean, production-ready **RESTful API** built with ASP.NET Core, focusing on:
-- Entity Framework Core  
-- Repository Pattern  
-- DTOs & Validation  
-- Swagger documentation  
-- Clean architecture principles  
+![ASP.NET Web API](https://img.shields.io/badge/ASP.NET-Web%20API-indigo?style=for-the-badge)
+![REST API](https://img.shields.io/badge/REST-API-black?style=for-the-badge)
 
-This API is part of my backend development journey where I’m learning and building real-world systems.
+![Repository Pattern](https://img.shields.io/badge/Repository-Pattern-darkgreen?style=for-the-badge)
+![DTO](https://img.shields.io/badge/DTO-Pattern-yellow?style=for-the-badge)
+![Clean Architecture](https://img.shields.io/badge/Clean-Architecture-teal?style=for-the-badge)
 
----
 
-## 📌 **Features**
+A production-ready Student Management System backend built with ASP.NET Core Web API, following clean architecture principles and real-world backend practices.
 
-- ✔️ Full CRUD Operations  
-- ✔️ Repository Pattern with Async Methods  
-- ✔️ Entity Framework Core + SQL Server  
-- ✔️ DTOs (Request & Response models)  
-- ✔️ Data Annotation Validations  
-- ✔️ Swagger for API Testing & Documentation  
-- ✔️ Clean Controller + Service + Repository structure  
-- ✔️ Standard HTTP Status Codes
+This project is part of my full-stack .NET learning journey, where I focused on building first, understanding deeply, and scaling features step-by-step instead of copy-paste development.
 
----
+📌 Key Features
+🔹 Core Backend
 
-## 📁 **Project Structure**
+✔️ Clean RESTful APIs with standard HTTP status codes
 
-/Project-Name
+✔️ Controller → Service → Repository architecture
+
+✔️ Entity Framework Core (Code First) with SQL Server
+
+✔️ Async-first database operations
+
+✔️ DTO-based request & response models
+
+✔️ Input validation using Data Annotations
+
+🔹 Domain Modules Implemented
+🏢 Departments
+
+Create, update, delete, and fetch departments
+
+One-to-many relationship with Students
+
+👨‍🎓 Students
+
+Full CRUD operations
+
+Student linked to Department
+
+Get student with department details (JOIN)
+
+Pagination & sorting support for listing APIs
+
+📚 Courses
+
+Full CRUD operations
+
+Designed for scalable many-to-many relations
+
+🔗 Enrollment (Many-to-Many)
+
+Explicit Enrollment entity (Student ↔ Course)
+
+Composite primary key
+
+Prevents duplicate enrollments
+
+APIs to:
+
+Enroll student in a course
+
+Unenroll student
+
+Get courses for a student
+
+Get students in a course
+
+🔐 Authentication & Security (JWT)
+
+User registration & login
+
+Password hashing using ASP.NET Identity utilities
+
+JWT token generation & validation
+
+Role-based authorization support (Admin / User)
+
+[Authorize] applied on business controllers
+
+Clean separation of Auth vs Domain logic
+
+🔧 Developer Experience
+
+✔️ Swagger (OpenAPI) documentation
+
+✔️ Clean and readable codebase
+
+✔️ Modular, extensible structure
+
+✔️ Resume-ready real-world backend design
+
+📁 Project Structure
+/StudentManagementSystem
 ├── Controllers/
+│   ├── AuthController
+│   ├── DepartmentController
+│   ├── StudentController
+│   ├── CourseController
+│   └── EnrollmentController
+│
 ├── Services/
+│   ├── AuthService
+│   ├── TokenService
+│   ├── DepartmentService
+│   ├── StudentService
+│   ├── CourseService
+│   └── EnrollmentService
+│
 ├── Repositories/
+│   ├── DepartmentRepository
+│   ├── StudentRepository
+│   ├── CourseRepository
+│   └── EnrollmentRepository
+│
 ├── Models/
-│ ├── Entity Models
-│ └── DTOs
+│   ├── Entities
+│   └── DTOs
+│
 ├── Data/
-│ ├── AppDbContext
-│ └── Migrations
-├── Program.cs / Startup.cs
+│   ├── AppDbContext
+│   └── Migrations
+│
+├── Program.cs
 └── README.md
 
-yaml
-Copy code
-
----
-
-## 🛠 **Tech Stack**
-
-| Layer | Technology |
-|------|------------|
-| Backend | ASP.NET Core Web API (.NET 8) |
-| Language | C# |
-| ORM | Entity Framework Core |
-| Database | SQL Server |
-| Architecture | Repository Pattern + Services |
-| Documentation | Swagger (Swashbuckle) |
-
----
-
-## 🚀 **How to Run Locally**
-
-1. **Clone the repository**
-```bash
+🛠 Tech Stack
+Layer	Technology
+Backend	ASP.NET Core Web API (.NET 8)
+Language	C#
+ORM	Entity Framework Core
+Database	SQL Server
+Authentication	JWT (JSON Web Token)
+Architecture	Controller → Service → Repository
+API Docs	Swagger (Swashbuckle)
+🚀 How to Run Locally
+1️⃣ Clone the repository
 git clone https://github.com/YOUR-USERNAME/YOUR-REPO.git
-Open in Visual Studio / VS Code
 
-Restore dependencies
+2️⃣ Open in Visual Studio / VS Code
 
-Update database
+Restore dependencies automatically.
 
-bash
-Copy code
+3️⃣ Update Database
 dotnet ef database update
-Run the project
 
-bash
-Copy code
+4️⃣ Run the project
 dotnet run
-Open Swagger at:
 
-bash
-Copy code
+5️⃣ Open Swagger
 https://localhost:<PORT>/swagger/index.html
-🔥 API Endpoints
+
+🔥 Sample API Endpoints
+🔐 Authentication
 Method	Endpoint	Description
-GET	/api/employees	Get all employees
-GET	/api/employees/{id}	Get employee by ID
-POST	/api/employees	Create employee
-PUT	/api/employees/{id}	Update employee
-DELETE	/api/employees/{id}	Delete employee
+POST	/api/auth/register	Register new user
+POST	/api/auth/login	Login & get JWT
+🏢 Departments
 
-(Change “employees” as per your entity)
+| GET | /api/departments |
+| POST | /api/departments |
 
-🧠 What’s New in This Version (Compared to Previous Project)
-✔ Repository Pattern Added
-Cleaner controllers
+👨‍🎓 Students
 
-All DB logic moved to repositories
+| GET | /api/students |
+| GET | /api/students/{id} |
+| POST | /api/students |
+| PUT | /api/students/{id} |
+| DELETE | /api/students/{id} |
 
-Async-first architecture
+📚 Courses
 
-✔ DTOs Implemented
-No exposing database entities
+| GET | /api/courses |
+| POST | /api/courses |
 
-Safe input/output formatting
+🔗 Enrollment
 
-Cleaner model binding
+| POST | /api/enrollment |
+| DELETE | /api/enrollment/{studentId}/{courseId} |
+| GET | /api/students/{id}/courses |
+| GET | /api/courses/{id}/students |
 
-✔ EF Core Integrated
-Real SQL Server Database
+🧠 What This Project Demonstrates
 
-Migrations enabled
+Real-world backend design
 
-Tracking/No-tracking queries fixed
+Clean separation of concerns
 
-✔ Swagger Polished
-XML comments ready
+Correct use of EF Core relationships
 
-Interactive API test UI
+JWT authentication without mixing domain logic
 
-✔ Better architecture
-Controller → Service → Repository
+Scalable architecture suitable for enterprise apps
 
-Fully modular and scalable
+This project was built incrementally with deep understanding, not generated from templates.
 
-📸 Screenshots (Replace with your own)
-🔹 Swagger — All Endpoints
-(Insert screenshot here)
+🔮 Future Enhancements
 
-🔹 Swagger — Successful CRUD Execution
-(Insert screenshot here)
+🔜 Angular frontend (Full-stack)
 
-🔹 SQL Server Table
-(Insert screenshot here)
+🔜 Role-based UI (Admin vs User)
 
-🔮 Next Enhancements
-🔜 JWT Authentication
+🔜 Global exception handling middleware
 
-🔜 Global Exception Handling (Middleware)
+🔜 Unit testing (xUnit)
 
-🔜 Pagination for GET endpoints
+🔜 Refresh tokens
 
-🔜 Unit Tests (xUnit / NUnit)
+👤 Author
 
+Hrishikesh kulat 🌞
+Backend-focused .NET Developer
+Learning by building real-world systems.
 🔜 Logging with Serilog
 
 🤝 Contributing
