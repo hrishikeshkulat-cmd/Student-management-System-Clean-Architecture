@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Restful_Api1.Dto;
@@ -7,6 +8,7 @@ using Restful_Api1.Repositories;
 using Restful_Api1.Service;
 namespace Restful_Api1.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class DepartmentController : ControllerBase

@@ -10,6 +10,7 @@ namespace Restful_Api1.Controllers
 
     namespace Restful_Api1.Controllers
     {
+        [AllowAnonymous ]
         [ApiController]
         [Route("api/[controller]")]
         public class AuthController : ControllerBase
@@ -22,7 +23,7 @@ namespace Restful_Api1.Controllers
             }
 
             [HttpPost("register")]
-            public async Task<IActionResult> Register(RegisterDto dto)
+            public async Task<IActionResult> Register([FromBody] RegisterDto dto)
             {
                 if (!ModelState.IsValid)
                     return BadRequest(ModelState);
@@ -35,13 +36,9 @@ namespace Restful_Api1.Controllers
                 return Ok("User registered successfully");
             }
 
-           
             [HttpPost("login")]
-            public async Task<IActionResult> Login(LoginDto dto)
+            public async Task<IActionResult> Login([FromBody] LoginDto dto)
             {
-                if (!ModelState.IsValid)
-                    return BadRequest(ModelState);
-
                 var token = await _authService.LoginAsync(dto);
 
                 if (token == null)
@@ -49,9 +46,13 @@ namespace Restful_Api1.Controllers
 
                 return Ok(new
                 {
-                    token = token
+                    accessToken = token,
+                    tokenType = "Bearer",
+                    expiresIn = 60 * 60, // seconds (example: 1 hour)
+                    username = dto.Username
                 });
             }
+
         }
     }
 
